@@ -1,0 +1,72 @@
+<view class="weui-search-bar">
+  <view class="weui-search-bar__form">
+    <view class="weui-search-bar__box">
+      <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+      <input type="text" class="weui-search-bar__input" placeholder="搜索" bindconfirm="search" confirm-type="search" value="{{search}}" focus="{{showSearch}}" bindinput="inputTyping" />
+      <view class="weui-icon-clear" wx:if="{{search.length > 0}}" bindtap="clearInput">
+        <icon type="clear" size="14"></icon>
+      </view>
+    </view>
+    <label class="weui-search-bar__label" hidden="{{showSearch}}" bindtap="showInput">
+      <icon class="weui-icon-search" type="search" size="14"></icon>
+      <view class="weui-search-bar__text">搜索</view>
+    </label>
+  </view>
+  <view class="weui-search-bar__cancel-btn" hidden="{{!showSearch}}" bindtap="hideInput">取消</view>
+</view>
+<scroll-view scrollY bindscrolltolower="loadMore" style="height:{{scrollHeight}}px;margin-top:100rpx;">
+  <view class="houses_contianer" wx:for="{{list.records}}" wx:key="this" data-id="{{item.houseId}}">
+    <image class="container_bg" lazyLoad="true" src="/images/house/bg.png"></image>
+    <view class="peo_sign_container">
+      <view class="p_h_flex">
+        <text class="iconfont icon-yonghuming"></text>
+        <view class="peo_sign">{{item.userName}}</view>
+      </view>
+      <view class="p_h_flex" catchtap="toCall" data-mobile="{{item.mobile}}">
+        <text class="iconfont icon-dianhua1"></text>
+        <view class="peo_sign">{{item.mobile}}</view>
+      </view>
+    </view>
+    <view class="p_h_container">
+      <view bindtap="tenantList" class="p_h_flex p_h_margin people_detail" data-id="{{item.houseId}}">
+        <image class="icon" lazyLoad="true" src="/images/house/Myhouse5.png"></image>
+        <view class="explain_p_h p_h_flex">
+          <text class="explain_p_h_1">{{item.tenantNum}}</text>
+          <text class="explain_p_h_2">在居人数</text>
+        </view>
+      </view>
+      <view bindtap="houseDetail" class="p_h_flex p_h_margin house_detail" data-id="{{item.houseId}}">
+        <image class="icon" lazyLoad="true" src="/images/house/Myhouse4.png"></image>
+        <view class="explain_p_h p_h_flex ">
+          <text class="explain_p_h_1">{{item.room}}</text>
+          <text class="explain_p_h_2">出租间数</text>
+        </view>
+      </view>
+    </view>
+    <view bindtap="openLocation" class="p_h_flex address_container" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}" data-name="{{item.address}}{{item.street}}">
+      <text class="iconfont icon-dingwei col-blue"></text>
+      <text class="address twolist-hidden">{{item.address}}{{item.street}}</text>
+    </view>
+    <view wx:if="{{item.status==1}}" class="col-orange" bindtap="houseDetail" data-id="{{item.houseId}}">
+      <view class="iconfont icon-status">
+        <view class="status-text">待审核</view>
+      </view>
+    </view>
+    <view wx:if="{{item.status==2}}" class="col-green" bindtap="houseDetail" data-id="{{item.houseId}}">
+      <view class="iconfont icon-status">
+        <view class="status-text">审核成功</view>
+      </view>
+    </view>
+    <view wx:if="{{item.status==3}}" class="col-red" bindtap="houseDetail" data-id="{{item.houseId}}">
+      <view class="iconfont icon-status">
+        <view class="status-text">审核失败</view>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{!loading&&!list.records.length}}">
+    <view class="no-content">
+      <text class="iconfont icon-wushuju"></text>
+      <text class="msg">没有相关数据！</text>
+    </view>
+  </view>
+</scroll-view>
